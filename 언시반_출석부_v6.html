@@ -1,0 +1,1846 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>언론고시반 출석부</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#1a1a1a;font-size:14px;background:#f5f5f5}
+.page{display:none;min-height:100vh}.page.active{display:block}
+.card{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:1rem 1.25rem;margin-bottom:12px}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:9px 18px;border:1px solid #d0d0d0;border-radius:8px;background:transparent;color:#1a1a1a;cursor:pointer;font-size:13px;font-weight:500;transition:background 0.12s}
+.btn:hover{background:#f0f0f0}.btn:active{transform:scale(0.98)}
+.btn-primary{background:#1a1a1a;color:#fff;border-color:#1a1a1a}.btn-primary:hover{opacity:0.85}
+.btn-danger{background:#D85A30;color:#fff;border-color:#D85A30}.btn-danger:hover{opacity:0.85}
+.btn-checkin{background:#1D9E75;color:#fff;border-color:#1D9E75;font-size:15px;padding:13px 0;width:100%;border-radius:12px}
+.btn-checkout{background:#D85A30;color:#fff;border-color:#D85A30;font-size:15px;padding:13px 0;width:100%;border-radius:12px}
+.btn-checkin:hover,.btn-checkout:hover{opacity:0.85}
+.btn-sm{padding:5px 12px;font-size:12px}.btn-xs{padding:3px 9px;font-size:12px}
+input,select{width:100%;padding:8px 11px;border:1px solid #d0d0d0;border-radius:8px;background:#fff;color:#1a1a1a;font-size:13px;margin-bottom:8px;font-family:inherit}
+input:focus,select:focus{outline:none;border-color:#1a1a1a}
+label{font-size:12px;color:#666;display:block;margin-bottom:3px}
+.err{color:#D85A30;font-size:12px;margin-bottom:8px}.ok{color:#1D9E75;font-size:12px;margin-bottom:8px}
+.metric-card{background:#f5f5f5;border-radius:10px;padding:.85rem;text-align:center}
+.metric-val{font-size:22px;font-weight:500}.metric-label{font-size:12px;color:#666;margin-top:3px}.metric-sub{font-size:11px;color:#999;margin-top:2px}
+.tab-bar{display:flex;gap:2px;margin-bottom:14px;border-bottom:1px solid #e5e5e5;overflow-x:auto}
+.tab{padding:7px 14px;cursor:pointer;font-size:13px;color:#666;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
+.tab.active{color:#1a1a1a;border-bottom-color:#1a1a1a;font-weight:500}
+.nav-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 1rem;border-bottom:1px solid #e5e5e5;background:#fff}
+.nav-title{font-size:15px;font-weight:500}
+.badge{display:inline-block;font-size:11px;padding:2px 7px;border-radius:20px}
+.badge-manager{background:#EEEDFE;color:#3C3489}.badge-member{background:#E1F5EE;color:#085041}
+.badge-pending{background:#FAEEDA;color:#633806}.badge-warn{background:#FCEBEB;color:#791F1F}
+.row{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid #f0f0f0;font-size:13px}.row:last-child{border-bottom:none}
+.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}.dot-in{background:#1D9E75}.dot-out{background:#ccc}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{text-align:left;color:#666;font-weight:500;padding:7px 5px;border-bottom:1px solid #e5e5e5}
+td{padding:7px 5px;border-bottom:1px solid #f0f0f0}tr:last-child td{border-bottom:none}
+.sec{font-size:11px;font-weight:500;color:#666;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.ip-chip{display:inline-flex;align-items:center;gap:6px;background:#f5f5f5;border:1px solid #e5e5e5;border-radius:20px;padding:3px 10px;font-size:12px;margin:3px}
+.warn-box{background:#FCEBEB;border:1px solid #F7C1C1;border-radius:8px;padding:10px 14px;font-size:13px;color:#791F1F;margin-bottom:12px}
+.info-box{background:#E1F5EE;border:1px solid #9FE1CB;border-radius:8px;padding:10px 14px;font-size:13px;color:#085041;margin-bottom:12px}
+.notice-box{background:#FFF8E1;border:1px solid #FFE082;border-radius:8px;padding:10px 14px;font-size:12px;color:#7a5c00;margin-bottom:12px}
+.progress-wrap{background:#e5e5e5;border-radius:20px;height:8px;overflow:hidden;margin-top:6px}
+.progress-bar{height:100%;border-radius:20px;transition:width 0.3s}
+.divider{border:none;border-top:1px solid #e5e5e5;margin:12px 0}
+.loading-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.3);display:none;align-items:center;justify-content:center;z-index:999}
+.loading-box{background:#fff;border-radius:12px;padding:1.5rem 2rem;font-size:14px}
+.spinner{width:18px;height:18px;border:2px solid #e5e5e5;border-top-color:#1a1a1a;border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block;margin-right:10px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+.live-timer{background:#E1F5EE;border:1px solid #9FE1CB;border-radius:10px;padding:12px 16px;margin-bottom:14px;text-align:center}
+.live-timer-val{font-size:26px;font-weight:500;color:#085041;letter-spacing:0.05em}
+.live-timer-label{font-size:12px;color:#1D9E75;margin-top:3px}
+.pin-input{letter-spacing:0.3em;font-size:18px;text-align:center}
+/* 모바일 터치 타겟 최적화 */
+@media(max-width:480px){
+  .btn-checkin,.btn-checkout{padding:16px 0;font-size:16px}
+  .btn{min-height:44px}
+  .tab{padding:10px 12px;font-size:12px}
+  .nav-bar{padding:8px 0.75rem}
+  .card{padding:0.875rem 1rem}
+  table{font-size:11px}
+  th,td{padding:6px 3px}
+}
+/* 네트워크 상태 표시 */
+.offline-banner{position:fixed;bottom:0;left:0;right:0;background:#555;color:#fff;text-align:center;padding:8px;font-size:13px;z-index:9998;display:none}
+/* 캘린더 모달 */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);display:none;align-items:center;justify-content:center;z-index:1000}
+.modal-overlay.active{display:flex}
+.modal-box{background:#fff;border-radius:16px;padding:1.25rem;width:320px;max-width:95vw;box-shadow:0 8px 32px rgba(0,0,0,0.15)}
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.cal-title{font-size:14px;font-weight:500}
+.cal-nav{background:none;border:none;cursor:pointer;font-size:18px;padding:4px 8px;border-radius:6px;color:#1a1a1a}
+.cal-nav:hover{background:#f0f0f0}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cal-day-header{text-align:center;font-size:11px;color:#999;padding:4px 0}
+.cal-day{text-align:center;padding:6px 2px;border-radius:6px;cursor:pointer;font-size:13px;border:none;background:none}
+.cal-day:hover{background:#f0f0f0}
+.cal-day.today{font-weight:600;color:#1D9E75}
+.cal-day.selected{background:#1a1a1a;color:#fff}
+.cal-day.in-range{background:#E1F5EE;color:#085041}
+.cal-day.range-start{background:#1a1a1a;color:#fff;border-radius:6px 0 0 6px}
+.cal-day.range-end{background:#1a1a1a;color:#fff;border-radius:0 6px 6px 0}
+.cal-day.other-month{color:#ccc}
+.cal-day.disabled{color:#e0e0e0;cursor:default}
+.date-range-display{background:#f5f5f5;border-radius:8px;padding:8px 12px;font-size:12px;color:#666;margin-bottom:10px;text-align:center}
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loading-overlay">
+  <div class="loading-box"><span class="spinner"></span>처리 중...</div>
+</div>
+
+<!-- 출석 수정 모달 -->
+<div class="modal-overlay" id="edit-modal">
+  <div class="modal-box" style="width:340px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <p style="font-size:15px;font-weight:500">출석 기록 수정</p>
+      <button class="btn btn-sm" onclick="closeEditModal()">✕</button>
+    </div>
+    <div style="margin-bottom:8px">
+      <span id="edit-name-badge" class="badge badge-member" style="margin-right:6px"></span>
+      <span id="edit-date-badge" style="font-size:13px;color:#666"></span>
+    </div>
+    <label>입실 시각 (HH:MM:SS)</label>
+    <input id="edit-checkin" placeholder="예: 08:30:00" maxlength="8" style="font-family:monospace" oninput="updateEditPreview()"/>
+    <label>퇴실 시각 (HH:MM:SS)</label>
+    <input id="edit-checkout" placeholder="예: 17:45:00" maxlength="8" style="font-family:monospace" oninput="updateEditPreview()"/>
+    <div class="err" id="edit-err" style="display:none"></div>
+    <div style="background:#f5f5f5;border-radius:8px;padding:8px 12px;margin-bottom:12px;font-size:12px;color:#666">
+      수정 후 체류시간: <strong id="edit-preview-hours">-</strong>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn" style="flex:1" onclick="closeEditModal()">취소</button>
+      <button class="btn btn-primary" style="flex:1" onclick="saveEditRecord()">저장</button>
+    </div>
+    <div style="margin-top:10px;border-top:1px solid #f0f0f0;padding-top:10px">
+      <button class="btn btn-sm" style="color:#D85A30;border-color:#D85A30;width:100%" onclick="deleteRecord()">이 기록 삭제</button>
+    </div>
+  </div>
+</div>
+
+<!-- 캘린더 모달 -->
+<div class="modal-overlay" id="cal-modal">
+  <div class="modal-box">
+    <div class="cal-header">
+      <button class="cal-nav" onclick="calPrevMonth()">‹</button>
+      <span class="cal-title" id="cal-title"></span>
+      <button class="cal-nav" onclick="calNextMonth()">›</button>
+    </div>
+    <div class="cal-grid" id="cal-day-headers"></div>
+    <div class="cal-grid" id="cal-grid"></div>
+    <div class="date-range-display" id="cal-range-display">날짜를 선택하세요</div>
+    <div style="display:flex;gap:8px;margin-top:10px">
+      <button class="btn" style="flex:1" onclick="calCancel()">취소</button>
+      <button class="btn btn-primary" style="flex:1" onclick="calConfirm()">확인</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div id="pg-login" class="page active">
+  <div style="max-width:340px;margin:2.5rem auto;padding:0 1rem">
+    <p style="font-size:19px;font-weight:500;margin-bottom:3px">언론고시반 출석부</p>
+    <p style="font-size:12px;color:#666;margin-bottom:20px">한국외국어대학교</p>
+    <div class="card">
+      <!-- (1) 다중 기기 로그인 안내 -->
+      <div class="notice-box" style="margin-bottom:12px">⚠️ 한 계정은 하나의 기기에서만 로그인 가능합니다.</div>
+      <label>이름 선택</label>
+      <select id="l-name"><option value="">-- 선택하세요 --</option></select>
+      <label>비밀번호 (숫자 4자리)</label>
+      <input type="password" id="l-pw" placeholder="••••" maxlength="4" class="pin-input"
+        oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+        onkeydown="if(event.key==='Enter')doLogin()"/>
+      <div class="err" id="l-err" style="display:none"></div>
+      <button class="btn btn-primary" style="width:100%;margin-top:4px" onclick="doLogin()">로그인</button>
+      <hr class="divider">
+      <button class="btn" style="width:100%;font-size:13px" onclick="showPg('pg-signup')">회원가입 신청</button>
+    </div>
+  </div>
+</div>
+
+<!-- SIGNUP -->
+<div id="pg-signup" class="page">
+  <div style="max-width:340px;margin:2.5rem auto;padding:0 1rem">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+      <button class="btn btn-sm" onclick="showPg('pg-login')">← 뒤로</button>
+      <p style="font-size:15px;font-weight:500">회원가입 신청</p>
+    </div>
+    <div class="card">
+      <label>이름 (한글 실명)</label>
+      <input id="su-name" placeholder="홍길동" maxlength="10" onblur="this.value=this.value.replace(/[^가-힣]/g,'')" oncompositionend="this.value=this.value.replace(/[^가-힣]/g,'')"/>
+      <label>비밀번호 (숫자 4자리)</label>
+      <input type="password" id="su-pw" placeholder="••••" maxlength="4" class="pin-input" oninput="this.value=this.value.replace(/[^0-9]/g,'')"/>
+      <label>비밀번호 확인</label>
+      <input type="password" id="su-pw2" placeholder="••••" maxlength="4" class="pin-input" oninput="this.value=this.value.replace(/[^0-9]/g,'')"/>
+      <div class="err" id="su-err" style="display:none"></div>
+      <div class="ok" id="su-ok" style="display:none"></div>
+      <button class="btn btn-primary" style="width:100%;margin-top:4px" onclick="doSignup()">가입 신청</button>
+    </div>
+  </div>
+</div>
+
+<!-- MEMBER -->
+<div id="pg-member" class="page">
+  <div class="nav-bar">
+    <div style="display:flex;align-items:center;gap:6px">
+      <span class="nav-title" id="m-username"></span>
+      <span class="badge badge-member">실원</span>
+      <span id="m-ip-badge"></span>
+    </div>
+    <div style="display:flex;gap:6px;align-items:center">
+      <span id="m-clock" style="font-size:12px;color:#666"></span>
+      <button class="btn btn-sm" onclick="doLogout()">로그아웃</button>
+    </div>
+  </div>
+  <div style="padding:1rem">
+    <div class="tab-bar">
+      <div class="tab active" onclick="mTab(this,'mt-attend')">출석</div>
+      <div class="tab" onclick="mTab(this,'mt-stats')">내 통계</div>
+    </div>
+    <div id="mt-attend">
+      <!-- (2) 최소 체류 안내 -->
+      <div class="notice-box">⏱ 최소 10분 이상 체류해야 출석으로 인정됩니다.</div>
+      <!-- GPS 위치 상태 카드 -->
+      <div id="m-gps-card" class="card" style="padding:12px 1.25rem;margin-bottom:12px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <span style="font-size:12px;font-weight:500;color:#666">📍 현재 위치 상태</span>
+          <button class="btn btn-xs" onclick="refreshGPSStatus()" id="m-gps-refresh-btn">위치 확인</button>
+        </div>
+        <div id="m-gps-status-box" style="border-radius:8px;padding:10px 12px;background:#f5f5f5;font-size:13px;color:#666">
+          위치 확인 버튼을 눌러주세요
+        </div>
+        <div style="margin-top:6px;display:flex;align-items:center;gap:6px">
+          <div id="m-gps-dot" style="width:8px;height:8px;border-radius:50%;background:#ccc;flex-shrink:0"></div>
+          <span id="m-gps-dist-label" style="font-size:11px;color:#999">거리 미확인</span>
+          <span style="font-size:11px;color:#ccc;margin-left:auto" id="m-gps-updated"></span>
+        </div>
+      </div>
+      <div class="card" style="text-align:center;padding:1.5rem 1.25rem">
+        <div id="m-ip-warn" class="warn-box" style="display:none;text-align:left"></div>
+        <div id="m-live-timer" class="live-timer" style="display:none">
+          <div class="live-timer-val" id="m-timer-val">00:00:00</div>
+          <div class="live-timer-label">현재 체류 중</div>
+        </div>
+        <p style="font-size:12px;color:#666;margin-bottom:6px">오늘 현황</p>
+        <p id="m-today-status" style="font-size:15px;font-weight:500;margin-bottom:18px">미출석</p>
+        <div id="m-btn-area"></div>
+        <p id="m-session-info" style="font-size:12px;color:#666;margin-top:10px"></p>
+      </div>
+      <div class="card"><div class="sec">최근 출석 기록</div><div id="m-recent"></div></div>
+    </div>
+    <div id="mt-stats" style="display:none">
+      <div id="m-month-info" style="margin-bottom:14px"></div>
+      <div class="grid2" id="m-stat-cards"></div>
+      <div class="card">
+        <div class="sec">전체 출석 기록</div>
+        <table><thead><tr><th>날짜</th><th>입실</th><th>퇴실</th><th>체류</th></tr></thead>
+        <tbody id="m-all-table"></tbody></table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MANAGER -->
+<div id="pg-manager" class="page">
+  <div class="nav-bar">
+    <div style="display:flex;align-items:center;gap:6px">
+      <span class="nav-title" id="mgr-username"></span>
+      <span class="badge badge-manager">실장</span>
+    </div>
+    <div style="display:flex;gap:6px;align-items:center">
+      <span id="mgr-clock" style="font-size:12px;color:#666"></span>
+      <button class="btn btn-sm" onclick="doLogout()">로그아웃</button>
+    </div>
+  </div>
+  <div style="padding:1rem">
+    <div class="tab-bar">
+      <div class="tab active" onclick="mgrTab(this,'mgrt-attend')">출석</div>
+      <div class="tab" onclick="mgrTab(this,'mgrt-overview')">현황</div>
+      <div class="tab" onclick="mgrTab(this,'mgrt-data')">데이터</div>
+      <div class="tab" onclick="mgrTab(this,'mgrt-members')">멤버 관리</div>
+      <div class="tab" onclick="mgrTab(this,'mgrt-settings')">설정</div>
+      <div class="tab" onclick="mgrTab(this,'mgrt-db')">DB 관리</div>
+      <div class="tab" onclick="mgrTab(this,'mgrt-log')">관리 로그</div>
+    </div>
+
+    <div id="mgrt-attend" style="display:block">
+      <div class="notice-box">⏱ 최소 10분 이상 체류해야 출석으로 인정됩니다.</div>
+      <!-- 실장 GPS 상태 카드 (실원과 동일) -->
+      <div id="mgr-gps-card" class="card" style="padding:12px 1.25rem;margin-bottom:12px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <span style="font-size:12px;font-weight:500;color:#666">📍 현재 위치 상태</span>
+          <button class="btn btn-xs" onclick="refreshManagerGPSStatus()">위치 확인</button>
+        </div>
+        <div id="mgr-gps-status-box" style="border-radius:8px;padding:10px 12px;background:#f5f5f5;font-size:13px;color:#666">
+          위치 확인 버튼을 눌러주세요
+        </div>
+        <div style="margin-top:6px;display:flex;align-items:center;gap:6px">
+          <div id="mgr-gps-dot" style="width:8px;height:8px;border-radius:50%;background:#ccc;flex-shrink:0"></div>
+          <span id="mgr-gps-dist-label" style="font-size:11px;color:#999">거리 미확인</span>
+        </div>
+      </div>
+      <div class="card" style="text-align:center;padding:1.5rem 1.25rem">
+        <div id="mgr-live-timer" class="live-timer" style="display:none">
+          <div class="live-timer-val" id="mgr-timer-val">00:00:00</div>
+          <div class="live-timer-label">현재 체류 중</div>
+        </div>
+        <p style="font-size:12px;color:#666;margin-bottom:6px">오늘 현황 (실장)</p>
+        <p id="mgr-today-status" style="font-size:15px;font-weight:500;margin-bottom:18px">미출석</p>
+        <div id="mgr-btn-area"></div>
+        <p id="mgr-session-info" style="font-size:12px;color:#666;margin-top:10px"></p>
+      </div>
+      <div class="card"><div class="sec">현재 입실 중</div><div id="mgr-active-list"></div></div>
+    </div>
+
+    <div id="mgrt-overview" style="display:none">
+      <div id="mgr-month-summary" style="margin-bottom:12px"></div>
+      <div class="card" style="margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div class="sec" style="margin-bottom:0">멤버별 현황</div>
+          <select id="ov-metric" style="width:auto;margin-bottom:0;font-size:12px" onchange="renderChart()">
+            <option value="monthHours">월 누적시간</option>
+            <option value="monthRate">월 달성률(%)</option>
+            <option value="dayRate">월 출석률(%)</option>
+          </select>
+        </div>
+        <div style="position:relative;height:200px"><canvas id="ov-chart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="sec">멤버별 이번 달 통계</div>
+        <table><thead><tr><th>이름</th><th>누적시간</th><th>달성률</th><th>출석일</th><th>출석률</th><th>상태</th></tr></thead>
+        <tbody id="ov-table"></tbody></table>
+      </div>
+    </div>
+
+    <!-- (3)(4) 데이터 탭: 캘린더 기간 설정 + xlsx -->
+    <div id="mgrt-data" style="display:none">
+      <div class="card">
+        <div class="sec">데이터 내보내기</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;align-items:center">
+          <select id="ex-member" style="width:auto;margin-bottom:0;font-size:12px" onchange="renderDataTable()"></select>
+          <button class="btn btn-sm" onclick="openCalModal()" id="ex-date-btn" style="font-size:12px">
+            📅 기간 선택
+          </button>
+          <button class="btn btn-sm" onclick="clearDateRange()" style="font-size:12px">전체 기간</button>
+          <button class="btn btn-sm btn-primary" onclick="exportExcel()">엑셀 다운로드</button>
+        </div>
+        <div id="ex-date-display" class="date-range-display" style="display:none"></div>
+        <table><thead><tr><th>날짜</th><th>이름</th><th>입실</th><th>퇴실</th><th>체류(h)</th><th>수정</th></tr></thead>
+        <tbody id="data-table"></tbody></table>
+      </div>
+    </div>
+
+    <div id="mgrt-members" style="display:none">
+      <div id="pending-section" class="card" style="display:none">
+        <div class="sec" style="color:#BA7517">가입 승인 대기</div>
+        <div id="pending-list"></div>
+      </div>
+      <div class="card"><div class="sec">멤버 목록</div><div id="member-list"></div></div>
+    </div>
+
+    <div id="mgrt-settings" style="display:none">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div class="sec" style="margin-bottom:0">GPS 위치 인증</div>
+          <label style="display:flex;align-items:center;gap:6px;margin-bottom:0;cursor:pointer">
+            <span style="font-size:12px;color:#666" id="gps-toggle-label">활성화됨</span>
+            <input type="checkbox" id="gps-toggle" onchange="toggleGPS(this.checked)" style="width:auto;margin-bottom:0"/>
+          </label>
+        </div>
+        <p style="font-size:12px;color:#666;margin-bottom:10px">설정된 좌표 반경 안에서만 입실이 가능합니다.</p>
+        <div style="background:#f5f5f5;border-radius:8px;padding:10px 12px;margin-bottom:10px;font-size:12px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+            <span style="color:#666">현재 위치</span>
+            <strong>한국외대 서울캠퍼스 도서관</strong>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+            <span style="color:#666">위도 / 경도</span>
+            <span id="gps-coord-display">37.5958562, 127.0587083</span>
+          </div>
+          <div style="display:flex;justify-content:space-between">
+            <span style="color:#666">허용 반경</span>
+            <span id="gps-radius-display">50m</span>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+          <div>
+            <label>위도</label>
+            <input id="gps-lat-input" type="number" step="0.0000001" style="margin-bottom:0" placeholder="37.5958562"/>
+          </div>
+          <div>
+            <label>경도</label>
+            <input id="gps-lng-input" type="number" step="0.0000001" style="margin-bottom:0" placeholder="127.0587083"/>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+          <label style="margin-bottom:0;white-space:nowrap">허용 반경</label>
+          <input id="gps-radius-input" type="number" min="10" max="500" style="width:80px;margin-bottom:0"/>
+          <span style="font-size:13px">m</span>
+          <button class="btn btn-sm btn-primary" onclick="saveGPSSettings()">저장</button>
+          <button class="btn btn-sm" onclick="testMyGPS()">내 위치 테스트</button>
+        </div>
+        <div id="gps-test-result" style="font-size:12px;display:none;padding:8px;border-radius:6px;margin-top:4px"></div>
+        <p class="ok" id="gps-save-ok" style="display:none;margin-top:6px"></p>
+      </div>
+      <div class="card">
+        <div class="sec">월 최소 출석 기준</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input id="min-hours-input" type="number" min="1" max="200" style="width:80px;margin-bottom:0"/>
+          <span style="font-size:13px">시간 / 월</span>
+          <button class="btn btn-sm btn-primary" onclick="saveMinHours()">저장</button>
+        </div>
+        <p class="ok" id="min-hours-ok" style="display:none;margin-top:6px"></p>
+      </div>
+      <div class="card" style="border-color:#F7C1C1">
+        <div class="sec" style="color:#791F1F">실장 인수인계</div>
+        <p style="font-size:12px;color:#666;margin-bottom:10px">다른 실원에게 실장 권한을 이전합니다. 본인은 실원으로 전환됩니다.</p>
+        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+          <select id="handover-target" style="width:auto;margin-bottom:0;font-size:13px"></select>
+          <button class="btn btn-sm btn-danger" onclick="doHandover()">권한 이전</button>
+        </div>
+        <p class="err" id="handover-err" style="display:none;margin-top:6px"></p>
+      </div>
+    </div>
+
+    <!-- DB 관리 탭 -->
+    <div id="mgrt-db" style="display:none">
+      <!-- 용량 현황 카드 -->
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div class="sec" style="margin-bottom:0">DB 용량 현황</div>
+          <button class="btn btn-sm" onclick="renderDBStats()">새로고침</button>
+        </div>
+        <div id="db-stats-loading" style="font-size:12px;color:#999">계산 중...</div>
+        <div id="db-stats" style="display:none">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+            <span style="font-size:13px;font-weight:500" id="db-used-label">0 KB 사용</span>
+            <span style="font-size:12px;color:#666">500 MB 한도</span>
+          </div>
+          <div class="progress-wrap" style="height:12px">
+            <div class="progress-bar" id="db-progress-bar" style="width:0%;background:#1D9E75"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:6px">
+            <span style="font-size:11px;color:#666" id="db-pct-label">0% 사용</span>
+            <span style="font-size:11px;color:#666" id="db-remain-label">남은 용량: 500 MB</span>
+          </div>
+          <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+            <div class="metric-card"><div class="metric-val" id="db-rec-count">-</div><div class="metric-label">출석 기록</div></div>
+            <div class="metric-card"><div class="metric-val" id="db-member-count">-</div><div class="metric-label">멤버 수</div></div>
+            <div class="metric-card"><div class="metric-val" id="db-oldest">-</div><div class="metric-label">최초 기록</div></div>
+          </div>
+          <div id="db-warn-box" style="display:none;margin-top:10px"></div>
+        </div>
+      </div>
+
+      <!-- 데이터 백업 & 삭제 -->
+      <div class="card">
+        <div class="sec">데이터 백업 후 삭제</div>
+        <div class="notice-box" style="margin-bottom:10px">⚠️ 삭제 전 반드시 엑셀 백업을 먼저 진행하세요. 삭제된 데이터는 복구 불가합니다.</div>
+        <label>삭제할 기간 (해당 날짜 이전 데이터 전체 삭제)</label>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
+          <input type="date" id="db-delete-before" style="width:auto;flex:1;margin-bottom:0"/>
+          <button class="btn btn-sm" onclick="backupBeforeDelete()">1. 백업 먼저</button>
+          <button class="btn btn-sm btn-danger" onclick="deleteOldRecords()">2. 삭제 실행</button>
+        </div>
+        <div id="db-delete-result" style="font-size:12px;display:none"></div>
+      </div>
+
+      <!-- 예상 수명 -->
+      <div class="card">
+        <div class="sec">DB 수명 예측</div>
+        <div id="db-lifetime" style="font-size:13px;color:#666">계산 중...</div>
+      </div>
+    </div>
+
+    <!-- 관리 로그 탭 -->
+    <div id="mgrt-log" style="display:none">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div class="sec" style="margin-bottom:0">관리자 활동 로그</div>
+          <button class="btn btn-sm" onclick="renderAuditLog()">새로고침</button>
+        </div>
+        <div style="font-size:12px;color:#999;margin-bottom:10px">최근 50건 표시 · 실장의 수정/삭제/승인 활동이 기록됩니다.</div>
+        <div style="overflow-x:auto">
+          <table style="min-width:500px">
+            <thead><tr><th>시각</th><th>실장</th><th>액션</th><th>내용</th></tr></thead>
+            <tbody id="audit-table"><tr><td colspan="4" style="color:#666">로딩 중...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+// ═══════════════════════════════════════════════════════
+// 언론고시반 출석부 | 한국외국어대학교
+// ───────────────────────────────────────────────────────
+// SECTIONS:
+//   [1] SUPABASE API       - DB 통신 레이어 (REST + RPC)
+//   [2] STATE & ERROR      - 전역 상태 + 에러 핸들러
+//   [3] UTILS              - 유틸리티 함수
+//   [4] AUTH               - 로그인/로그아웃/세션
+//   [5] ATTENDANCE         - 입실/퇴실 로직
+//   [6] STATS              - 통계 계산
+//   [7] UI - MEMBER        - 실원 화면 렌더링
+//   [8] UI - MANAGER       - 실장 화면 렌더링
+//   [9] AUDIT LOG          - 관리자 활동 기록
+//   [10] DB MANAGEMENT     - DB 용량/백업/삭제
+//   [11] AUTO LOGOUT       - 자동 로그아웃
+// ═══════════════════════════════════════════════════════
+
+// ── [1] SUPABASE API ─────────────────────────────────
+const SUPA_URL='https://iaxcgcwkbgrespnldkol.supabase.co';
+const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheGNnY3drYmdyZXNwbmxka29sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0MDQ3NDksImV4cCI6MjA5Mjk4MDc0OX0.HqtSvdc5zywcZfkOphLIlBz6RHsB1yg4FyuWgPuJIu4';
+const H={'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY};
+
+async function sb(method,table,body,params='',retries=2){
+  for(let attempt=0;attempt<=retries;attempt++){
+    try{
+      const r=await fetch(`${SUPA_URL}/rest/v1/${table}${params}`,{
+        method,headers:{...H,'Prefer':'return=representation'},
+        body:body?JSON.stringify(body):undefined
+      });
+      if(!r.ok){
+        const e=await r.json().catch(()=>({}));
+        const msg=e.message||e.error||`HTTP ${r.status}`;
+        // 4xx는 재시도 안 함
+        if(r.status>=400&&r.status<500) throw new Error(msg);
+        if(attempt===retries) throw new Error(msg);
+        await new Promise(res=>setTimeout(res,500*(attempt+1)));
+        continue;
+      }
+      const t=await r.text();return t?JSON.parse(t):[];
+    }catch(e){
+      if(attempt===retries) throw e;
+      await new Promise(res=>setTimeout(res,500*(attempt+1)));
+    }
+  }
+}
+const sbGet  =(t,p='') =>sb('GET',t,null,p);
+const sbPost =(t,b)    =>sb('POST',t,b);
+const sbPatch=(t,b,p)  =>sb('PATCH',t,b,p);
+const sbDel  =(t,p)    =>sb('DELETE',t,null,p);
+
+// RPC 호출 (서버 함수 - 권한 검증 DB에서 처리)
+async function sbRPC(fn, params={}){
+  const r=await fetch(`${SUPA_URL}/rest/v1/rpc/${fn}`,{
+    method:'POST',
+    headers:{...H,'Content-Type':'application/json'},
+    body:JSON.stringify(params)
+  });
+  if(!r.ok){
+    const e=await r.json().catch(()=>({}));
+    const msg=e.message||e.hint||e.details||`RPC 오류 (${r.status})`;
+    // 세션 만료 감지 → 친화적 로그아웃
+    if(msg.includes('만료') || msg.includes('세션')){
+      if(currentUser) handleSessionExpiry();
+    }
+    throw new Error(msg);
+  }
+  const t=await r.text();return t?JSON.parse(t):null;
+}
+
+// 입력값 검증
+function validate(data, rules){
+  for(const[key,rule] of Object.entries(rules)){
+    if(rule.required&&(data[key]===undefined||data[key]===null||data[key]===''))
+      throw new Error(`${key} 값이 필요합니다.`);
+    if(rule.maxLen&&typeof data[key]==='string'&&data[key].length>rule.maxLen)
+      throw new Error(`${key}이 너무 깁니다.`);
+    if(rule.pattern&&!rule.pattern.test(data[key]))
+      throw new Error(`${key} 형식이 올바르지 않습니다.`);
+  }
+  return true;
+}
+
+// ── 상태 ──────────────────────────────────────────────
+// 중앙 state — 모든 변경은 여기 기준으로
+const state = {
+  user: null,        // 로그인된 유저 객체
+  session: null,     // 현재 입실 세션
+  records: [],       // 캐시된 기록 (통계용)
+};
+let currentUser=null, ovChart=null, clockTick=null, timerTick=null;
+let myIP='확인 중...';
+let settings={minHours:60,allowedIPs:[],gpsLat:37.5958562,gpsLng:127.0587083,gpsRadius:50,gpsEnabled:true};
+let sessionToken=null;
+const MIN_STAY_MS=10*60*1000;
+const AUTO_LOGOUT_MS=30*60*1000;
+let autoLogoutTimer=null;
+
+// ── 에러 핸들러 ──────────────────────────────────────
+function showError(msg, retryFn=null){
+  const existing=document.getElementById('global-err-banner');
+  if(existing) existing.remove();
+  // 에러 메시지 사용자 친화적 변환
+  const friendlyMsg = msg
+    .replace('세션이 만료됐습니다. 다시 로그인해주세요.','⏰ 로그인 세션이 만료됐습니다. 다시 로그인해주세요.')
+    .replace('관리자 권한이 없습니다.','🔒 관리자 권한이 필요한 기능입니다.')
+    .replace('유효하지 않은 세션입니다.','⏰ 세션이 만료됐습니다. 다시 로그인해주세요.')
+    .replace('Failed to fetch','🌐 네트워크 연결을 확인해주세요.')
+    .replace('NetworkError','🌐 네트워크 연결을 확인해주세요.');
+  const banner=document.createElement('div');
+  banner.id='global-err-banner';
+  banner.style.cssText='position:fixed;top:0;left:0;right:0;z-index:9999;background:#D85A30;color:#fff;padding:10px 16px;font-size:13px;display:flex;justify-content:space-between;align-items:center;gap:10px;box-shadow:0 2px 8px rgba(0,0,0,0.2)';
+  banner.innerHTML=`<span>${friendlyMsg}</span><div style="display:flex;gap:8px">
+    ${retryFn?`<button onclick="(${retryFn.toString()})()" style="background:rgba(255,255,255,0.25);border:1px solid rgba(255,255,255,0.4);color:#fff;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:12px;font-weight:500">재시도</button>`:''}
+    <button onclick="this.parentElement.parentElement.remove()" style="background:rgba(255,255,255,0.15);border:none;color:#fff;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px">✕</button>
+  </div>`;
+  document.body.prepend(banner);
+  setTimeout(()=>{if(banner.parentElement)banner.remove();},10000);
+}
+
+// 세션 만료 시 친화적 로그아웃
+async function handleSessionExpiry(){
+  showError('⏰ 로그인 세션이 만료됐습니다. 다시 로그인해주세요.');
+  await new Promise(r=>setTimeout(r,1500));
+  await doLogout();
+}
+
+// 권한 체크 (관리자 기능 실행 전 항상 호출)
+function requireManager(fn){
+  return async function(...args){
+    if(!currentUser||currentUser.role!=='manager'){
+      showError('관리자 권한이 필요합니다.');return;
+    }
+    return fn.apply(this,args);
+  };
+}
+
+// ── 유틸 ──────────────────────────────────────────────
+function sha256(str){
+  return crypto.subtle.digest('SHA-256',new TextEncoder().encode(str))
+    .then(h=>Array.from(new Uint8Array(h)).map(b=>b.toString(16).padStart(2,'0')).join(''));
+}
+function genToken(){return crypto.randomUUID();}
+function todayStr(){return fmtDate(new Date());}
+function fmtDate(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function fmtTimeFull(d){return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+':'+String(d.getSeconds()).padStart(2,'0');}
+function msToHours(ms){return Math.round(ms/3600000*100)/100;}
+function nowStr(){return new Date().toLocaleTimeString('ko-KR');}
+function getMonthDays(){const n=new Date();return new Date(n.getFullYear(),n.getMonth()+1,0).getDate();}
+function getMonthRange(){const n=new Date();return{start:fmtDate(new Date(n.getFullYear(),n.getMonth(),1)),end:fmtDate(new Date(n.getFullYear(),n.getMonth()+1,0))};}
+function isIPAllowed(){return settings.allowedIPs.length===0||settings.allowedIPs.includes(myIP);}
+
+// GPS 거리 계산 (Haversine 공식, 단위: 미터)
+function calcDistance(lat1,lng1,lat2,lng2){
+  const R=6371000;
+  const dLat=(lat2-lat1)*Math.PI/180;
+  const dLng=(lng2-lng1)*Math.PI/180;
+  const a=Math.sin(dLat/2)*Math.sin(dLat/2)+
+    Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*
+    Math.sin(dLng/2)*Math.sin(dLng/2);
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+// GPS 위치 인증 (Promise 반환)
+function checkGPS(){
+  return new Promise((resolve,reject)=>{
+    if(!settings.gpsEnabled){resolve({ok:true,dist:0});return;}
+    if(!navigator.geolocation){reject(new Error('이 기기는 GPS를 지원하지 않습니다.'));return;}
+    navigator.geolocation.getCurrentPosition(
+      pos=>{
+        const dist=calcDistance(pos.coords.latitude,pos.coords.longitude,settings.gpsLat,settings.gpsLng);
+        resolve({ok:dist<=settings.gpsRadius,dist:Math.round(dist)});
+      },
+      err=>{
+        if(err.code===1) reject(new Error('위치 권한이 거부됐습니다. 브라우저 설정에서 위치 허용 후 다시 시도하세요.'));
+        else if(err.code===2) reject(new Error('위치를 확인할 수 없습니다. 잠시 후 다시 시도하세요.'));
+        else reject(new Error('GPS 오류: '+err.message));
+      },
+      {enableHighAccuracy:true,timeout:10000,maximumAge:0}
+    );
+  });
+}
+function showPg(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');}
+let _isLoading=false;
+function loading(on){
+  _isLoading=on;
+  document.getElementById('loading-overlay').style.display=on?'flex':'none';
+  // 입실/퇴실 버튼 중복 클릭 방지
+  document.querySelectorAll('.btn-checkin,.btn-checkout').forEach(btn=>{
+    btn.disabled=on;
+    btn.style.opacity=on?'0.6':'1';
+  });
+}
+
+// ── (1) 로그인 세션 관리 ──────────────────────────────
+// ── [4] AUTH ─────────────────────────────────────────
+// 토큰 hex 해시 (DB의 encode(digest(token,'sha256'),'hex')와 동일)
+async function hashToken(token){
+  return await sha256(token); // sha256()이 이미 hex 반환
+}
+
+async function checkDuplicateLogin(memberId){
+  const rows=await sbGet('user_sessions',`?member_id=eq.${memberId}`);
+  if(rows.length===0) return false;
+  const session=rows[0];
+  // 만료 체크
+  if(session.expires_at && new Date(session.expires_at)<new Date()){
+    await sbDel('user_sessions',`?member_id=eq.${memberId}`);
+    return false;
+  }
+  return true;
+}
+
+async function createLoginSession(member){
+  // member: {id, name, ...}
+  const token=genToken();
+  const tokenHash=await hashToken(token);
+  const expiresAt=new Date(Date.now()+8*3600000).toISOString(); // 8시간
+  // 기존 세션 삭제 (UNIQUE 인덱스 때문에 먼저 삭제 필요)
+  await sbDel('user_sessions',`?member_id=eq.${member.id}`);
+  await sbPost('user_sessions',{
+    member_name: member.name,
+    member_id: member.id,
+    session_token: token,      // 레거시 필드 (참고용)
+    token_hash: tokenHash,     // 실제 검증에 사용
+    expires_at: expiresAt
+  });
+  return token; // raw token은 클라이언트만 보관
+}
+
+async function deleteLoginSession(memberId){
+  try{await sbDel('user_sessions',`?member_id=eq.${memberId}`);}catch(e){}
+}
+
+// ── 입실 세션 ─────────────────────────────────────────
+
+async function createSession(member, token){
+  // member: {id, name}, token: raw sessionToken
+  const tokenHash=await hashToken(token);
+  // 기존 세션 삭제
+  await sbDel('sessions',`?member_id=eq.${member.id}`);
+  const now=new Date();
+  await sbPost('sessions',{
+    member_name: member.name,
+    member_id: member.id,
+    checkin_ts: now.toISOString(),
+    date: fmtDate(now),
+    login_token_hash: tokenHash  // 토큰과 세션 연결
+  });
+  return await getActiveSession(member.id);
+}
+
+async function getActiveSession(memberId){
+  try{
+    const rows=await sbGet('sessions',`?member_id=eq.${memberId}&limit=1`);
+    return rows.length>0?rows[0]:null;
+  }catch(e){return null;}
+}
+
+async function deleteSession(memberId){
+  await sbDel('sessions',`?member_id=eq.${memberId}`);
+}
+
+// ── 타이머 ────────────────────────────────────────────
+function startTimer(checkinISO,valId,divId){
+  stopTimer();
+  const t0=new Date(checkinISO).getTime();
+  document.getElementById(divId).style.display='block';
+  const tick=()=>{
+    const e=Date.now()-t0;
+    const h=Math.floor(e/3600000),m=Math.floor((e%3600000)/60000),s=Math.floor((e%60000)/1000);
+    document.getElementById(valId).textContent=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  };
+  tick();timerTick=setInterval(tick,1000);
+}
+function stopTimer(){if(timerTick){clearInterval(timerTick);timerTick=null;}}
+function fmtDurationTimer(ms){
+  const h=Math.floor(ms/3600000),m=Math.floor((ms%3600000)/60000),s=Math.floor((ms%60000)/1000);
+  return`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+// ── 초기화 ────────────────────────────────────────────
+async function init(){
+  fetch('https://api.ipify.org?format=json').then(r=>r.json()).then(d=>{myIP=d.ip;}).catch(()=>{myIP='확인불가';});
+  try{
+    const rows=await sbGet('settings');
+    rows.forEach(r=>{
+      if(r.key==='minHours') settings.minHours=parseInt(r.value);
+      if(r.key==='allowedIPs') settings.allowedIPs=JSON.parse(r.value);
+      if(r.key==='gpsLat') settings.gpsLat=parseFloat(r.value);
+      if(r.key==='gpsLng') settings.gpsLng=parseFloat(r.value);
+      if(r.key==='gpsRadius') settings.gpsRadius=parseInt(r.value);
+      if(r.key==='gpsEnabled') settings.gpsEnabled=(r.value==='true');
+    });
+  }catch(e){}
+  await populateLoginSelect();
+  // GPS 설정 DB에 없으면 기본값 삽입
+  try{
+    const existing=await sbGet('settings','?key=in.(gpsLat,gpsLng,gpsRadius,gpsEnabled)');
+    const keys=existing.map(r=>r.key);
+    const defaults=[
+      {key:'gpsLat',value:'37.5958562'},
+      {key:'gpsLng',value:'127.0587083'},
+      {key:'gpsRadius',value:'50'},
+      {key:'gpsEnabled',value:'true'}
+    ];
+    for(const d of defaults){
+      if(!keys.includes(d.key)) await sbPost('settings',d);
+    }
+  }catch(e){}
+}
+
+async function populateLoginSelect(){
+  try{
+    const members=await sbGet('members','?approved=eq.true&order=name');
+    const sel=document.getElementById('l-name');
+    sel.innerHTML='<option value="">-- 선택하세요 --</option>'+
+      members.map(m=>`<option value="${m.name}">${m.name}${m.role==='manager'?' (실장)':''}</option>`).join('');
+  }catch(e){document.getElementById('l-name').innerHTML='<option value="">DB 연결 오류</option>';}
+}
+
+// ── 로그인/아웃 ───────────────────────────────────────
+async function doLogin(){
+  const name=document.getElementById('l-name').value;
+  const pw=document.getElementById('l-pw').value.trim();
+  const errEl=document.getElementById('l-err');
+  errEl.style.display='none';
+  if(!name){errEl.textContent='이름을 선택하세요.';errEl.style.display='block';return;}
+  if(!pw||pw.length!==4||!/^\d{4}$/.test(pw)){errEl.textContent='비밀번호는 숫자 4자리입니다.';errEl.style.display='block';return;}
+  loading(true);
+  try{
+    const hash=await sha256(pw);
+    const rows=await sbGet('members',`?name=eq.${encodeURIComponent(name)}&pw_hash=eq.${hash}&approved=eq.true`);
+    if(rows.length===0){errEl.textContent='이름 또는 비밀번호가 올바르지 않습니다.';errEl.style.display='block';loading(false);return;}
+
+
+    currentUser=rows[0];
+
+    // 중복 로그인 체크 (member_id 기반)
+    const isDup=await checkDuplicateLogin(currentUser.id);
+    if(isDup){
+      loading(false);
+      const force=confirm('이미 다른 기기(또는 이전 세션)에서 로그인되어 있습니다.\n강제로 로그인하시겠습니까?\n(기존 세션은 자동 로그아웃됩니다)');
+      if(!force) return;
+      loading(true);
+      await deleteLoginSession(currentUser.id);
+    }
+
+    // 만료/유령 세션 정리
+    try{
+      await sbRPC('cleanup_expired_sessions',{});
+      await sbRPC('cleanup_stale_checkins',{});
+    }catch(e){}
+
+
+    sessionToken=await createLoginSession(currentUser);
+    resetAutoLogoutTimer();
+    if(clockTick) clearInterval(clockTick);
+    if(currentUser.role==='manager'){
+      showPg('pg-manager');
+      document.getElementById('mgr-username').textContent=currentUser.name;
+      clockTick=setInterval(()=>{document.getElementById('mgr-clock').textContent=nowStr();},1000);
+      document.getElementById('mgr-clock').textContent=nowStr();
+      document.getElementById('min-hours-input').value=settings.minHours;
+      await renderManagerAttend();
+      populateHandoverSelect();
+      // 실장도 로그인 시 GPS 자동 확인
+      setTimeout(()=>refreshManagerGPSStatus(),500);
+    }else{
+      showPg('pg-member');
+      document.getElementById('m-username').textContent=currentUser.name;
+      clockTick=setInterval(()=>{document.getElementById('m-clock').textContent=nowStr();},1000);
+      document.getElementById('m-clock').textContent=nowStr();
+      gpsCache={ok:null,dist:null,checkedAt:null};
+      await renderMemberAttend();
+      setTimeout(()=>refreshGPSStatus(),500);
+    }
+  }catch(e){errEl.textContent='로그인 오류: '+e.message;errEl.style.display='block';}
+  loading(false);
+}
+
+async function doLogout(){
+  stopTimer();
+  if(clockTick) clearInterval(clockTick);clockTick=null;
+  if(autoLogoutTimer) clearTimeout(autoLogoutTimer);autoLogoutTimer=null;
+  if(currentUser) await deleteLoginSession(currentUser.id);
+  sessionToken=null;currentUser=null;
+  document.getElementById('l-name').selectedIndex=0;
+  document.getElementById('l-pw').value='';
+  document.querySelectorAll('#pg-manager .tab').forEach((t,i)=>t.classList.toggle('active',i===0));
+  ['mgrt-attend','mgrt-overview','mgrt-data','mgrt-members','mgrt-settings','mgrt-db','mgrt-log'].forEach((id,i)=>
+    document.getElementById(id).style.display=i===0?'block':'none');
+  document.querySelectorAll('#pg-member .tab').forEach((t,i)=>t.classList.toggle('active',i===0));
+  ['mt-attend','mt-stats'].forEach((id,i)=>document.getElementById(id).style.display=i===0?'block':'none');
+  populateLoginSelect();showPg('pg-login');
+}
+
+// ── 회원가입 ──────────────────────────────────────────
+async function doSignup(){
+  const name=document.getElementById('su-name').value.trim();
+  const pw=document.getElementById('su-pw').value.trim();
+  const pw2=document.getElementById('su-pw2').value.trim();
+  const errEl=document.getElementById('su-err');const okEl=document.getElementById('su-ok');
+  errEl.style.display='none';okEl.style.display='none';
+  if(!name||!/^[가-힣]+$/.test(name)){errEl.textContent='이름은 한글만 입력 가능합니다.';errEl.style.display='block';return;}
+  if(!pw||pw.length!==4||!/^\d{4}$/.test(pw)){errEl.textContent='비밀번호는 숫자 4자리입니다.';errEl.style.display='block';return;}
+  if(pw!==pw2){errEl.textContent='비밀번호가 일치하지 않습니다.';errEl.style.display='block';return;}
+  loading(true);
+  try{
+    const dup1=await sbGet('members',`?name=eq.${encodeURIComponent(name)}`);
+    const dup2=await sbGet('pending',`?name=eq.${encodeURIComponent(name)}`);
+    if(dup1.length>0||dup2.length>0){errEl.textContent='이미 존재하거나 대기 중인 이름입니다.';errEl.style.display='block';loading(false);return;}
+    const hash=await sha256(pw);
+    await sbPost('pending',{name,pw_hash:hash});
+    okEl.textContent='가입 신청 완료! 실장의 승인을 기다려주세요.';okEl.style.display='block';
+    document.getElementById('su-name').value='';document.getElementById('su-pw').value='';document.getElementById('su-pw2').value='';
+  }catch(e){errEl.textContent='오류: '+e.message;errEl.style.display='block';}
+  loading(false);
+}
+
+// ── 탭 전환 ──────────────────────────────────────────
+function mTab(el,target){
+  document.querySelectorAll('#pg-member .tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');
+  ['mt-attend','mt-stats'].forEach(id=>document.getElementById(id).style.display='none');
+  document.getElementById(target).style.display='block';
+  if(target==='mt-stats') renderMemberStats();
+}
+function mgrTab(el,target){
+  document.querySelectorAll('#pg-manager .tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');
+  ['mgrt-attend','mgrt-overview','mgrt-data','mgrt-members','mgrt-settings','mgrt-db','mgrt-log'].forEach(id=>document.getElementById(id).style.display='none');
+  document.getElementById(target).style.display='block';
+  if(target==='mgrt-overview') renderOverview();
+  if(target==='mgrt-data') renderDataTable();
+  if(target==='mgrt-members') renderMembersTab();
+  if(target==='mgrt-settings'){renderGPSSettings();populateHandoverSelect();}
+  if(target==='mgrt-db') renderDBStats();
+  if(target==='mgrt-log') renderAuditLog();
+}
+
+// ── 입실/퇴실 ─────────────────────────────────────────
+async function doCheckin(){
+  if(!currentUser)return;
+  loading(true);
+  try{
+    const gps=await checkGPS();
+    gpsCache={ok:gps.ok,dist:gps.dist,checkedAt:Date.now()};
+    if(!gps.ok){
+      loading(false);
+      alert(`📍 언시반 위치에서 벗어나 있습니다.\n현재 거리: ${gps.dist}m (허용 반경: ${settings.gpsRadius}m)\n언시반 내부에서 다시 시도하세요.`);
+      return;
+    }
+    await createSession(currentUser, sessionToken);
+  }catch(e){
+    loading(false);
+    alert('입실 오류: '+e.message);
+    return;
+  }
+  loading(false);
+  if(currentUser.role==='manager') await renderManagerAttend();else await renderMemberAttend();
+}
+
+async function doCheckout(){
+  if(!currentUser) return;
+
+  // 현재 입실 세션 확인
+  const session=await getActiveSession(currentUser.id);
+  if(!session){
+    // 세션 없는데 퇴실 버튼 눌린 경우 → 화면만 갱신
+    if(currentUser.role==='manager') await renderManagerAttend();
+    else await renderMemberAttend();
+    return;
+  }
+
+  // 10분 미만 체류 체크
+  const elapsedMs=Date.now()-new Date(session.checkin_ts).getTime();
+  if(elapsedMs < MIN_STAY_MS){
+    const elapsedMin=Math.floor(elapsedMs/60000);
+    const elapsedSec=Math.floor((elapsedMs%60000)/1000);
+    const ok=confirm(`⏱ 10분 미만은 출석 인정이 불가합니다.\n\n현재 체류시간: ${elapsedMin}분 ${elapsedSec}초\n\n그래도 퇴실하시겠습니까?\n(출석 기록에 저장되지 않습니다)`);
+    if(!ok) return;
+    // 기록 없이 세션만 삭제 후 종료
+    loading(true);
+    try{ await deleteSession(currentUser.id); state.session=null; }
+    catch(e){ showError('퇴실 오류: '+e.message); }
+    stopTimer(); loading(false);
+    if(currentUser.role==='manager') await renderManagerAttend();
+    else await renderMemberAttend();
+    return; // ← 여기서 완전 종료, GPS/RPC 흐름 안 탐
+  }
+
+  // 10분 이상 → GPS 체크 → RPC 퇴실
+  loading(true);
+  try{
+    const gps=await checkGPS();
+    gpsCache={ok:gps.ok,dist:gps.dist,checkedAt:Date.now()};
+    if(!gps.ok){
+      loading(false);
+      alert(`📍 허용 구역 밖에서는 퇴실할 수 없습니다.\n현재 거리: ${gps.dist}m (허용 반경: ${settings.gpsRadius}m)\n언시반 내부에서 다시 시도하세요.`);
+      if(currentUser.role!=='manager') updateAttendButtons();
+      return;
+    }
+  }catch(e){
+    loading(false);
+    alert('퇴실 오류 (GPS): '+e.message); return;
+  }
+  try{
+    await sbRPC('insert_record',{p_token:sessionToken});
+    state.session=null;
+  }catch(e){
+    const msg=e.message||'';
+    if(msg.includes('만료')||msg.includes('세션')){
+      handleSessionExpiry();
+    } else {
+      showError('퇴실 저장 실패: '+msg, doCheckout);
+    }
+    loading(false); return;
+  }
+  stopTimer(); loading(false);
+  if(currentUser.role==='manager') await renderManagerAttend();
+  else await renderMemberAttend();
+}
+
+// ── 통계 계산 ─────────────────────────────────────────
+async function calcStats(name,allRecords=null){
+  const mo=getMonthRange();
+  let recs=allRecords
+    ?allRecords.filter(r=>r.member_name===name&&r.date>=mo.start&&r.date<=mo.end)
+    :await sbGet('records',`?member_name=eq.${encodeURIComponent(name)}&date=gte.${mo.start}&date=lte.${mo.end}`);
+  const monthHours=Math.round(recs.reduce((s,r)=>s+parseFloat(r.hours),0)*100)/100;
+  const uniqDays=[...new Set(recs.map(r=>r.date))].length;
+  const todayNum=new Date().getDate();
+  return{monthHours,monthRate:Math.round(monthHours/settings.minHours*100),uniqDays,totalDays:getMonthDays(),todayNum,dayRate:todayNum>0?Math.round(uniqDays/todayNum*100):0};
+}
+
+// ── 실원 화면 ─────────────────────────────────────────
+// GPS 상태 전역 캐시 (마지막 확인 결과)
+let gpsCache = {ok: null, dist: null, checkedAt: null};
+
+async function refreshGPSStatus(){
+  const statusBox = document.getElementById('m-gps-status-box');
+  const dot = document.getElementById('m-gps-dot');
+  const distLabel = document.getElementById('m-gps-dist-label');
+  const updatedLabel = document.getElementById('m-gps-updated');
+  const refreshBtn = document.getElementById('m-gps-refresh-btn');
+  if(!statusBox) return;
+
+  if(!settings.gpsEnabled){
+    statusBox.style.background='#f5f5f5';statusBox.style.color='#666';
+    statusBox.textContent='GPS 인증이 비활성화되어 있습니다. 자유롭게 입퇴실 가능합니다.';
+    dot.style.background='#ccc';distLabel.textContent='GPS 인증 꺼짐';
+    gpsCache={ok:true,dist:0,checkedAt:Date.now()};
+    updateAttendButtons();return;
+  }
+
+  refreshBtn.textContent='확인 중...';refreshBtn.disabled=true;
+  statusBox.style.background='#f5f5f5';statusBox.style.color='#666';
+  statusBox.textContent='📡 위치 확인 중...';
+
+  try{
+    const gps = await checkGPS();
+    gpsCache = {ok:gps.ok, dist:gps.dist, checkedAt:Date.now()};
+    if(gps.ok){
+      statusBox.style.background='#E1F5EE';statusBox.style.color='#085041';
+      statusBox.innerHTML=`✅ <strong>허용 구역 내</strong> — 입실/퇴실 가능합니다.<br><span style="font-size:11px">언시반까지 ${gps.dist}m (허용 반경 ${settings.gpsRadius}m)</span>`;
+      dot.style.background='#1D9E75';
+      distLabel.textContent=`언시반까지 ${gps.dist}m`;
+    }else{
+      statusBox.style.background='#FCEBEB';statusBox.style.color='#791F1F';
+      statusBox.innerHTML=`❌ <strong>허용 구역 외</strong> — 입실/퇴실이 불가합니다.<br><span style="font-size:11px">현재 거리 ${gps.dist}m (허용 반경 ${settings.gpsRadius}m 초과)</span>`;
+      dot.style.background='#D85A30';
+      distLabel.textContent=`현재 거리 ${gps.dist}m (${gps.dist - settings.gpsRadius}m 초과)`;
+    }
+    updatedLabel.textContent='방금 확인';
+  }catch(e){
+    gpsCache={ok:false,dist:null,checkedAt:Date.now()};
+    statusBox.style.background='#FCEBEB';statusBox.style.color='#791F1F';
+    statusBox.textContent='⚠️ 위치 확인 실패: '+e.message;
+    dot.style.background='#ccc';distLabel.textContent='확인 실패';
+  }
+  refreshBtn.textContent='위치 확인';refreshBtn.disabled=false;
+  updateAttendButtons();
+}
+
+function updateAttendButtons(){
+  // GPS 캐시 기준으로 버튼 상태 업데이트 (렌더 없이 버튼만 교체)
+  const areaEl = document.getElementById('m-btn-area');
+  const session_exists = document.querySelector('.btn-checkout') !== null;
+  if(!areaEl) return;
+  const canAct = !settings.gpsEnabled || gpsCache.ok === true;
+  const disCheckin = '<button class="btn btn-checkin" disabled style="opacity:0.35;cursor:not-allowed">📍 허용 구역 밖 — 입실 불가</button>';
+  const disCheckout = '<button class="btn btn-checkout" disabled style="opacity:0.35;cursor:not-allowed">📍 허용 구역 밖 — 퇴실 불가</button>';
+  if(session_exists){
+    if(!canAct) areaEl.innerHTML = disCheckout;
+    else areaEl.innerHTML = '<button class="btn btn-checkout" onclick="doCheckout()">퇴실</button>';
+  } else {
+    // 재입실 여부는 텍스트로 판단
+    const isRevisit = areaEl.innerHTML.includes('재입실');
+    if(!canAct) areaEl.innerHTML = disCheckin;
+    else areaEl.innerHTML = isRevisit
+      ? '<button class="btn btn-checkin" onclick="doCheckin()">재입실</button>'
+      : '<button class="btn btn-checkin" onclick="doCheckin()">입실</button>';
+  }
+}
+
+async function renderMemberAttend(){
+  if(!currentUser) return;
+  const warnEl=document.getElementById('m-ip-warn');const badgeEl=document.getElementById('m-ip-badge');
+  if(!warnEl||!badgeEl) return;
+  warnEl.style.display='none';badgeEl.innerHTML='';
+
+  const session=await getActiveSession(currentUser.id);
+  const statusEl=document.getElementById('m-today-status');
+  const areaEl=document.getElementById('m-btn-area');
+  const infoEl=document.getElementById('m-session-info');
+  if(!statusEl||!areaEl||!infoEl) return;
+
+  // GPS 캐시가 있고 30초 이내면 재사용, 아니면 null로 처리
+  const cacheValid = gpsCache.checkedAt && (Date.now()-gpsCache.checkedAt) < 30000;
+  const canAct = !settings.gpsEnabled || (cacheValid && gpsCache.ok===true);
+
+  const disCheckin = '<button class="btn btn-checkin" disabled style="opacity:0.35;cursor:not-allowed">📍 허용 구역 밖 — 입실 불가</button>';
+  const disCheckout = '<button class="btn btn-checkout" disabled style="opacity:0.35;cursor:not-allowed">📍 허용 구역 밖 — 퇴실 불가</button>';
+  const unchecked = '<button class="btn btn-checkin" disabled style="opacity:0.35;cursor:not-allowed">📍 위치 확인 후 입실 가능</button>';
+
+  if(session){
+    statusEl.textContent='입실 중';statusEl.style.color='#1D9E75';
+    if(!cacheValid && settings.gpsEnabled) areaEl.innerHTML=disCheckout;
+    else areaEl.innerHTML=canAct?'<button class="btn btn-checkout" onclick="doCheckout()">퇴실</button>':disCheckout;
+    infoEl.textContent='입실 시각: '+fmtTimeFull(new Date(session.checkin_ts));
+    startTimer(session.checkin_ts,'m-timer-val','m-live-timer');
+  }else{
+    stopTimer();document.getElementById('m-live-timer').style.display='none';
+    let todayRecs=[];
+    try{todayRecs=await sbGet('records',`?member_name=eq.${encodeURIComponent(currentUser.name)}&date=eq.${todayStr()}`);}catch(e){}
+    if(todayRecs.length>0){
+      const tot=todayRecs.reduce((s,r)=>s+parseFloat(r.hours),0);
+      statusEl.textContent=`퇴실 완료 (오늘 ${Math.round(tot*100)/100}h)`;statusEl.style.color='';
+      if(!cacheValid && settings.gpsEnabled) areaEl.innerHTML=unchecked.replace('입실','재입실');
+      else areaEl.innerHTML=canAct?'<button class="btn btn-checkin" onclick="doCheckin()">재입실</button>':disCheckin;
+    }else{
+      statusEl.textContent='미출석';statusEl.style.color='';
+      if(!cacheValid && settings.gpsEnabled) areaEl.innerHTML=unchecked;
+      else areaEl.innerHTML=canAct?'<button class="btn btn-checkin" onclick="doCheckin()">입실</button>':disCheckin;
+    }
+    infoEl.textContent='';
+  }
+  try{
+    const recent=await sbGet('records',`?member_name=eq.${encodeURIComponent(currentUser.name)}&order=date.desc,created_at.desc&limit=5`);
+    document.getElementById('m-recent').innerHTML=recent.length===0
+      ?'<p style="font-size:12px;color:#666">기록 없음</p>'
+      :recent.map(r=>`<div class="row"><div class="dot dot-out"></div><div style="flex:1">${r.date}</div><div style="color:#666">${r.checkin}–${r.checkout}</div><div style="min-width:50px;text-align:right;font-weight:500">${r.hours}h</div></div>`).join('');
+  }catch(e){}
+}
+
+async function renderMemberStats(){
+  loading(true);
+  const st=await calcStats(currentUser.name);
+  const prog=Math.min(100,st.monthRate);
+  const pc=prog>=100?'#1D9E75':prog>=60?'#378ADD':'#D85A30';
+  document.getElementById('m-month-info').innerHTML=`
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+        <span style="font-size:12px;color:#666">${new Date().getMonth()+1}월 목표 달성률</span>
+        <span style="font-size:18px;font-weight:500;color:${pc}">${st.monthRate}%</span>
+      </div>
+      <div class="progress-wrap"><div class="progress-bar" style="width:${prog}%;background:${pc}"></div></div>
+      <div style="display:flex;justify-content:space-between;margin-top:5px">
+        <span style="font-size:11px;color:#666">${st.monthHours}h / ${settings.minHours}h 목표</span>
+        <span style="font-size:11px;color:#666">출석 ${st.uniqDays}일 / ${st.todayNum}일 경과</span>
+      </div>
+    </div>`;
+  document.getElementById('m-stat-cards').innerHTML=`
+    <div class="metric-card"><div class="metric-val">${st.monthHours}h</div><div class="metric-label">월 누적시간</div><div class="metric-sub">목표 ${settings.minHours}h</div></div>
+    <div class="metric-card"><div class="metric-val">${st.dayRate}%</div><div class="metric-label">월 출석률</div><div class="metric-sub">${st.uniqDays}일 / ${st.todayNum}일</div></div>`;
+  const recs=await sbGet('records',`?member_name=eq.${encodeURIComponent(currentUser.name)}&order=date.desc`);
+  document.getElementById('m-all-table').innerHTML=recs.length===0
+    ?'<tr><td colspan="4" style="color:#666">기록 없음</td></tr>'
+    :recs.map(r=>`<tr><td>${r.date}</td><td>${r.checkin}</td><td>${r.checkout}</td><td>${r.hours}h</td></tr>`).join('');
+  loading(false);
+}
+
+// ── 실장 GPS 상태 확인 ──────────────────────────────
+async function refreshManagerGPSStatus(){
+  const statusBox=document.getElementById('mgr-gps-status-box');
+  const dot=document.getElementById('mgr-gps-dot');
+  const distLabel=document.getElementById('mgr-gps-dist-label');
+  if(!statusBox) return;
+  if(!settings.gpsEnabled){
+    statusBox.style.background='#f5f5f5';statusBox.style.color='#666';
+    statusBox.textContent='GPS 인증이 비활성화되어 있습니다.';
+    dot.style.background='#ccc';distLabel.textContent='GPS 인증 꺼짐';
+    return;
+  }
+  statusBox.style.background='#f5f5f5';statusBox.style.color='#666';
+  statusBox.textContent='📡 위치 확인 중...';
+  try{
+    const gps=await checkGPS();
+    gpsCache={ok:gps.ok,dist:gps.dist,checkedAt:Date.now()};
+    if(gps.ok){
+      statusBox.style.background='#E1F5EE';statusBox.style.color='#085041';
+      statusBox.innerHTML=`✅ <strong>허용 구역 내</strong> — 입실/퇴실 가능합니다.<br><span style="font-size:11px">언시반까지 ${gps.dist}m (허용 반경 ${settings.gpsRadius}m)</span>`;
+      dot.style.background='#1D9E75';
+      distLabel.textContent=`언시반까지 ${gps.dist}m`;
+    }else{
+      statusBox.style.background='#FCEBEB';statusBox.style.color='#791F1F';
+      statusBox.innerHTML=`❌ <strong>허용 구역 외</strong> — 입실/퇴실이 불가합니다.<br><span style="font-size:11px">현재 거리 ${gps.dist}m (허용 반경 ${settings.gpsRadius}m 초과)</span>`;
+      dot.style.background='#D85A30';
+      distLabel.textContent=`현재 거리 ${gps.dist}m`;
+    }
+  }catch(e){
+    statusBox.style.background='#FCEBEB';statusBox.style.color='#791F1F';
+    statusBox.textContent='⚠️ 위치 확인 실패: '+e.message;
+    dot.style.background='#ccc';
+  }
+}
+
+// ── 실장 화면 ─────────────────────────────────────────
+async function renderManagerAttend(){
+  if(!currentUser) return;
+  const statusEl=document.getElementById('mgr-today-status');
+  const areaEl=document.getElementById('mgr-btn-area');
+  const infoEl=document.getElementById('mgr-session-info');
+  if(!statusEl||!areaEl||!infoEl) return;
+  const session=await getActiveSession(currentUser.id);
+  if(session){
+    statusEl.textContent='입실 중';statusEl.style.color='#1D9E75';
+    areaEl.innerHTML='<button class="btn btn-checkout" onclick="doCheckout()">퇴실</button>';
+    infoEl.textContent='입실 시각: '+fmtTimeFull(new Date(session.checkin_ts));
+    startTimer(session.checkin_ts,'mgr-timer-val','mgr-live-timer');
+  }else{
+    stopTimer();document.getElementById('mgr-live-timer').style.display='none';
+    let todayRecs=[];
+    try{todayRecs=await sbGet('records',`?member_name=eq.${encodeURIComponent(currentUser.name)}&date=eq.${todayStr()}`);}catch(e){}
+    if(todayRecs.length>0){
+      const tot=todayRecs.reduce((s,r)=>s+parseFloat(r.hours),0);
+      statusEl.textContent=`퇴실 완료 (오늘 ${Math.round(tot*100)/100}h)`;statusEl.style.color='';
+      areaEl.innerHTML='<button class="btn btn-checkin" onclick="doCheckin()">재입실</button>';
+    }else{
+      statusEl.textContent='미출석';statusEl.style.color='';
+      areaEl.innerHTML='<button class="btn btn-checkin" onclick="doCheckin()">입실</button>';
+    }
+    infoEl.textContent='';
+  }
+  try{
+    const active=await sbGet('sessions','?order=checkin_ts.asc');
+    document.getElementById('mgr-active-list').innerHTML=active.length===0
+      ?'<p style="font-size:12px;color:#666">현재 입실 중인 멤버 없음</p>'
+      :active.map(s=>`<div class="row"><div class="dot dot-in"></div><div style="flex:1;font-weight:500">${s.member_name}</div><div style="color:#666">${fmtTimeFull(new Date(s.checkin_ts))} 입실</div><div style="min-width:60px;text-align:right;color:#1D9E75;font-size:12px">${fmtDurationTimer(Date.now()-new Date(s.checkin_ts).getTime())}</div></div>`).join('');
+  }catch(e){}
+}
+
+async function renderOverview(){
+  loading(true);
+  const tn=new Date().getDate();const td=getMonthDays();
+  document.getElementById('mgr-month-summary').innerHTML=`<div class="info-box">${new Date().getMonth()+1}월 기준 · 이달 ${tn}일 경과 / 총 ${td}일 · 월 목표: ${settings.minHours}h</div>`;
+  const mo=getMonthRange();
+  const [allRecs,members]=await Promise.all([sbGet('records',`?date=gte.${mo.start}&date=lte.${mo.end}`),sbGet('members','?approved=eq.true&order=name')]);
+  const sm={};for(const m of members) sm[m.name]=await calcStats(m.name,allRecs);
+  document.getElementById('ov-table').innerHTML=members.map(m=>{
+    const st=sm[m.name];const ok=st.monthHours>=settings.minHours;
+    return`<tr><td style="font-weight:500">${m.name}${m.role==='manager'?' <span class="badge badge-manager" style="font-size:10px">실장</span>':''}</td><td>${st.monthHours}h</td><td>${st.monthRate}%</td><td>${st.uniqDays}일</td><td>${st.dayRate}%</td><td>${ok?'<span class="badge" style="background:#E1F5EE;color:#085041">달성</span>':'<span class="badge badge-warn">미달</span>'}</td></tr>`;
+  }).join('');
+  window._cm=members;window._cs=sm;renderChart();loading(false);
+}
+function renderChart(){
+  const metric=document.getElementById('ov-metric').value;
+  const members=window._cm||[];
+  const isRate=metric.includes('Rate');
+  if(ovChart){ovChart.destroy();ovChart=null;}
+  ovChart=new Chart(document.getElementById('ov-chart'),{
+    type:'bar',
+    data:{labels:members.map(m=>m.name),datasets:[{data:members.map(m=>(window._cs||{})[m.name]?.[metric]||0),backgroundColor:['#1D9E75','#378ADD','#D85A30','#7F77DD','#BA7517','#0F6E56','#185FA5'].slice(0,members.length),borderRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,max:isRate?100:undefined,ticks:{callback:v=>v+(isRate?'%':'h')}}}}
+  });
+}
+
+// ── 데이터 탭 ─────────────────────────────────────────
+async function renderDataTable(){
+  loading(true);
+  const members=await sbGet('members','?approved=eq.true&order=name');
+  const sel=document.getElementById('ex-member');
+  const prevVal=sel.value;
+  sel.innerHTML='<option value="all">전체 멤버</option>'+members.map(m=>`<option value="${m.name}">${m.name}</option>`).join('');
+  if(prevVal) sel.value=prevVal;
+  const mf=sel.value||'all';
+  let params='?order=date.desc,created_at.desc';
+  if(mf!=='all') params+=`&member_name=eq.${encodeURIComponent(mf)}`;
+  if(calRange.start&&calRange.end) params+=`&date=gte.${calRange.start}&date=lte.${calRange.end}`;
+  const recs=await sbGet('records',params);
+  document.getElementById('data-table').innerHTML=recs.length===0
+    ?'<tr><td colspan="6" style="color:#666">해당 기간에 기록 없음</td></tr>'
+    :recs.map(r=>`<tr>
+      <td>${r.date}</td>
+      <td>${r.member_name}</td>
+      <td style="font-family:monospace">${r.checkin}</td>
+      <td style="font-family:monospace">${r.checkout}</td>
+      <td>${r.hours}</td>
+      <td><button class="btn btn-xs" style="color:#378ADD;border-color:#378ADD" onclick="openEditModal('${r.id}','${r.member_name}','${r.date}','${r.checkin}','${r.checkout}')">수정</button></td>
+    </tr>`).join('');
+  loading(false);
+}
+
+// (3) 진짜 xlsx 엑셀 내보내기
+async function exportExcel(){
+  const mf=document.getElementById('ex-member').value;
+  loading(true);
+  let params='?order=date.asc';
+  if(mf!=='all') params+=`&member_name=eq.${encodeURIComponent(mf)}`;
+  if(calRange.start&&calRange.end){
+    params+=`&date=gte.${calRange.start}&date=lte.${calRange.end}`;
+  }
+  const recs=await sbGet('records',params);
+  loading(false);
+  if(recs.length===0){alert('내보낼 데이터가 없습니다.');return;}
+
+  // SheetJS로 진짜 xlsx 생성
+  const wsData=[
+    ['날짜','이름','입실','퇴실','체류시간(h)'],
+    ...recs.map(r=>[r.date,r.member_name,r.checkin,r.checkout,parseFloat(r.hours)])
+  ];
+  const ws=XLSX.utils.aoa_to_sheet(wsData);
+  // 열 너비 설정
+  ws['!cols']=[{wch:12},{wch:10},{wch:12},{wch:12},{wch:12}];
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'출석명단');
+  const fname=`언시반_출석명단_${fmtDate(new Date())}.xlsx`;
+  XLSX.writeFile(wb,fname);
+}
+
+// ── (4) 캘린더 모달 ──────────────────────────────────
+let calRange={start:null,end:null};
+let calSelecting={first:null,second:null,step:0}; // step 0=없음 1=첫날선택 2=완료
+let calYear=new Date().getFullYear();
+let calMonth=new Date().getMonth();
+const CAL_DAYS=['일','월','화','수','목','금','토'];
+
+function openCalModal(){
+  calYear=new Date().getFullYear();calMonth=new Date().getMonth();
+  calSelecting={first:null,second:null,step:0};
+  renderCalendar();
+  document.getElementById('cal-modal').classList.add('active');
+}
+function calCancel(){document.getElementById('cal-modal').classList.remove('active');}
+function calConfirm(){
+  if(calSelecting.step===2&&calSelecting.first&&calSelecting.second){
+    const a=calSelecting.first<calSelecting.second?calSelecting.first:calSelecting.second;
+    const b=calSelecting.first<calSelecting.second?calSelecting.second:calSelecting.first;
+    calRange.start=a;calRange.end=b;
+    const disp=document.getElementById('ex-date-display');
+    disp.style.display='block';disp.textContent=`${a} ~ ${b}`;
+    renderDataTable();
+  }
+  document.getElementById('cal-modal').classList.remove('active');
+}
+function clearDateRange(){
+  calRange={start:null,end:null};
+  calSelecting={first:null,second:null,step:0};
+  document.getElementById('ex-date-display').style.display='none';
+  renderDataTable();
+}
+function calPrevMonth(){calMonth--;if(calMonth<0){calMonth=11;calYear--;}renderCalendar();}
+function calNextMonth(){calMonth++;if(calMonth>11){calMonth=0;calYear++;}renderCalendar();}
+
+function renderCalendar(){
+  document.getElementById('cal-title').textContent=`${calYear}년 ${calMonth+1}월`;
+  const hdEl=document.getElementById('cal-day-headers');
+  hdEl.innerHTML=CAL_DAYS.map(d=>`<div class="cal-day-header">${d}</div>`).join('');
+  const first=new Date(calYear,calMonth,1).getDay();
+  const lastDay=new Date(calYear,calMonth+1,0).getDate();
+  const prevLast=new Date(calYear,calMonth,0).getDate();
+  const todayISO=todayStr();
+  let cells='';
+  // 이전달 빈칸
+  for(let i=0;i<first;i++){
+    const d=prevLast-first+1+i;
+    cells+=`<button class="cal-day other-month" disabled>${d}</button>`;
+  }
+  for(let d=1;d<=lastDay;d++){
+    const iso=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    let cls='cal-day';
+    if(iso===todayISO) cls+=' today';
+    const f=calSelecting.first,s=calSelecting.second;
+    if(f&&s){
+      const lo=f<s?f:s,hi=f<s?s:f;
+      if(iso===lo) cls+=' range-start';
+      else if(iso===hi) cls+=' range-end';
+      else if(iso>lo&&iso<hi) cls+=' in-range';
+    }else if(f&&iso===f){cls+=' selected';}
+    cells+=`<button class="${cls}" onclick="calSelectDay('${iso}')">${d}</button>`;
+  }
+  // 다음달 빈칸
+  const remaining=(7-((first+lastDay)%7))%7;
+  for(let i=1;i<=remaining;i++) cells+=`<button class="cal-day other-month" disabled>${i}</button>`;
+  document.getElementById('cal-grid').innerHTML=cells;
+  // 안내 텍스트
+  const rd=document.getElementById('cal-range-display');
+  if(calSelecting.step===0) rd.textContent='시작 날짜를 선택하세요';
+  else if(calSelecting.step===1) rd.textContent=`${calSelecting.first} → 종료 날짜를 선택하세요`;
+  else{
+    const a=calSelecting.first<calSelecting.second?calSelecting.first:calSelecting.second;
+    const b=calSelecting.first<calSelecting.second?calSelecting.second:calSelecting.first;
+    rd.textContent=`${a} ~ ${b}`;
+  }
+}
+function calSelectDay(iso){
+  if(calSelecting.step===0||calSelecting.step===2){
+    calSelecting.first=iso;calSelecting.second=null;calSelecting.step=1;
+  }else if(calSelecting.step===1){
+    if(iso===calSelecting.first){calSelecting.step=0;calSelecting.first=null;}
+    else{calSelecting.second=iso;calSelecting.step=2;}
+  }
+  renderCalendar();
+}
+
+// ── 멤버 관리 탭 ─────────────────────────────────────
+async function renderMembersTab(){
+  loading(true);
+  const pending=await sbGet('pending','?order=created_at');
+  const psec=document.getElementById('pending-section');
+  if(pending.length>0){
+    psec.style.display='block';
+    document.getElementById('pending-list').innerHTML=pending.map(p=>`
+      <div class="row"><div style="flex:1;font-weight:500">${p.name}</div>
+      <span class="badge badge-pending">대기</span>
+      <button class="btn btn-sm btn-primary" style="margin-left:4px" onclick="approveMember('${p.id}','${p.name}','${p.pw_hash}')">승인</button>
+      <button class="btn btn-sm btn-danger" onclick="rejectMember('${p.id}')">거절</button></div>`).join('');
+  }else{psec.style.display='none';}
+  const members=await sbGet('members','?approved=eq.true&order=name');
+  const sorted=[...members.filter(m=>m.role==='manager'),...members.filter(m=>m.role!=='manager')];
+  document.getElementById('member-list').innerHTML=sorted.map(m=>`
+    <div class="row"><div style="flex:1;font-weight:500">${m.name}</div>
+    <span class="badge ${m.role==='manager'?'badge-manager':'badge-member'}" style="margin-right:6px">${m.role==='manager'?'실장':'실원'}</span>
+    ${m.name!==currentUser.name?`<button class="btn btn-xs" style="color:#D85A30;border-color:#D85A30" onclick="removeMember('${m.id}','${m.name}','${m.role}')">삭제</button>`:'<span style="font-size:11px;color:#666">(나)</span>'}
+    </div>`).join('');
+  loading(false);
+}
+async function approveMember(id,name,pwHash){
+  if(!currentUser||currentUser.role!=='manager'){showError('관리자 권한 필요');return;}
+  loading(true);
+  try{
+    await sbRPC('manager_approve_member',{
+      p_token: sessionToken,
+      p_pending_id: id
+    });
+    await renderMembersTab();await populateHandoverSelect();
+  }catch(e){showError('승인 오류: '+e.message);}loading(false);
+}
+async function rejectMember(id){
+  if(!currentUser||currentUser.role!=='manager'){showError('관리자 권한 필요');return;}
+  if(!confirm('가입 신청을 거절할까요?'))return;
+  loading(true);
+  try{
+    if(!currentUser||currentUser.role!=='manager') throw new Error('관리자 권한 필요');
+    const p=await sbGet('pending',`?id=eq.${id}`);
+    await sbDel('pending',`?id=eq.${id}`);
+    await writeAuditLog('멤버거절', p[0]?.name||'', '가입 신청 거절');
+    await renderMembersTab();
+  }catch(e){showError('거절 오류: '+e.message);}loading(false);
+}
+async function removeMember(id,name,role){
+  if(!currentUser||currentUser.role!=='manager'){showError('관리자 권한 필요');return;}
+  if(role==='manager'){alert('실장은 삭제할 수 없습니다.');return;}
+  if(!confirm(`⚠️ ${name} 멤버를 삭제할까요?\n\n삭제된 멤버는 복구할 수 없습니다.\n출석 기록은 유지됩니다.`))return;
+  loading(true);
+  try{
+    await sbRPC('manager_delete_member',{
+      p_token: sessionToken,
+      p_member_id: id
+    });
+    await renderMembersTab();await populateHandoverSelect();
+  }catch(e){showError('삭제 오류: '+e.message);}loading(false);
+}
+
+// ── 설정 (GPS) ───────────────────────────────────────
+function renderGPSSettings(){
+  document.getElementById('gps-toggle').checked=settings.gpsEnabled;
+  document.getElementById('gps-toggle-label').textContent=settings.gpsEnabled?'활성화됨':'비활성화됨';
+  document.getElementById('gps-lat-input').value=settings.gpsLat;
+  document.getElementById('gps-lng-input').value=settings.gpsLng;
+  document.getElementById('gps-radius-input').value=settings.gpsRadius;
+  document.getElementById('gps-coord-display').textContent=`${settings.gpsLat}, ${settings.gpsLng}`;
+  document.getElementById('gps-radius-display').textContent=settings.gpsRadius+'m';
+}
+
+async function toggleGPS(enabled){
+  settings.gpsEnabled=enabled;
+  document.getElementById('gps-toggle-label').textContent=enabled?'활성화됨':'비활성화됨';
+  try{
+    await sbRPC('update_setting',{p_token:sessionToken, p_key:'gpsEnabled', p_value:String(enabled)});
+  }catch(e){showError('GPS 설정 저장 실패: '+e.message);}
+}
+
+async function saveGPSSettings(){
+  const lat=parseFloat(document.getElementById('gps-lat-input').value);
+  const lng=parseFloat(document.getElementById('gps-lng-input').value);
+  const radius=parseInt(document.getElementById('gps-radius-input').value);
+  if(isNaN(lat)||isNaN(lng)||isNaN(radius)){alert('올바른 값을 입력하세요.');return;}
+  settings.gpsLat=lat;settings.gpsLng=lng;settings.gpsRadius=radius;
+  loading(true);
+  try{
+    await sbRPC('update_setting',{p_token:sessionToken, p_key:'gpsLat', p_value:String(lat)});
+    await sbRPC('update_setting',{p_token:sessionToken, p_key:'gpsLng', p_value:String(lng)});
+    await sbRPC('update_setting',{p_token:sessionToken, p_key:'gpsRadius', p_value:String(radius)});
+    settings.gpsLat=lat;settings.gpsLng=lng;settings.gpsRadius=radius;
+  }catch(e){showError('GPS 설정 저장 실패: '+e.message);loading(false);return;}
+  loading(false);
+  document.getElementById('gps-coord-display').textContent=`${lat}, ${lng}`;
+  document.getElementById('gps-radius-display').textContent=radius+'m';
+  const ok=document.getElementById('gps-save-ok');
+  ok.textContent=`저장 완료 (위도 ${lat}, 경도 ${lng}, 반경 ${radius}m)`;
+  ok.style.display='block';setTimeout(()=>{ok.style.display='none';},3000);
+}
+
+async function testMyGPS(){
+  const resEl=document.getElementById('gps-test-result');
+  resEl.style.display='block';resEl.style.background='#f5f5f5';resEl.textContent='📡 위치 확인 중...';
+  try{
+    const gps=await checkGPS();
+    if(gps.ok){
+      resEl.style.background='#E1F5EE';resEl.style.color='#085041';
+      resEl.textContent=`✅ 인증 성공! 언시반까지 거리: ${gps.dist}m (허용 반경: ${settings.gpsRadius}m)`;
+    }else{
+      resEl.style.background='#FCEBEB';resEl.style.color='#791F1F';
+      resEl.textContent=`❌ 인증 실패. 현재 거리: ${gps.dist}m (허용 반경: ${settings.gpsRadius}m 초과)`;
+    }
+  }catch(e){
+    resEl.style.background='#FCEBEB';resEl.style.color='#791F1F';
+    resEl.textContent='오류: '+e.message;
+  }
+}
+async function saveMinHours(){
+  const v=parseInt(document.getElementById('min-hours-input').value);if(!v||v<1)return;
+  settings.minHours=v;
+  try{await sbRPC('update_setting',{p_token:sessionToken,p_key:'minHours',p_value:String(v)});}
+  catch(e){showError('설정 저장 실패: '+e.message);return;}
+  const ok=document.getElementById('min-hours-ok');ok.textContent='저장됐습니다. (월 목표: '+v+'h)';ok.style.display='block';
+  setTimeout(()=>{ok.style.display='none';},2500);
+}
+async function populateHandoverSelect(){
+  const sel=document.getElementById('handover-target');if(!sel)return;
+  try{const others=await sbGet('members','?approved=eq.true&role=eq.member&order=name');
+    sel.innerHTML=others.length===0?'<option value="">대상 실원 없음</option>':others.map(m=>`<option value="${m.id}|${m.name}">${m.name}</option>`).join('');}catch(e){}
+}
+async function doHandover(){
+  const val=document.getElementById('handover-target')?.value||'';
+  const errEl=document.getElementById('handover-err');errEl.style.display='none';
+  if(!val){errEl.textContent='인수인계 대상을 선택하세요.';errEl.style.display='block';return;}
+  const [tid,tname]=val.split('|');
+  if(!confirm(`🔄 실장 권한 인수인계\n\n${tname}에게 실장 권한을 이전합니다.\n본인(${currentUser.name})은 실원으로 전환됩니다.\n\n이 작업은 즉시 적용됩니다. 계속하시겠습니까?`))return;
+  loading(true);
+  try{
+    // RPC — DB에서 권한 검증 + 역할 교체 + audit log 원자적 처리
+    await sbRPC('manager_handover',{
+      p_token: sessionToken,
+      p_target_id: tid
+    });
+    alert('인수인계 완료! '+tname+'이(가) 새 실장입니다.\n다시 로그인해주세요.');
+    doLogout();
+  }catch(e){errEl.textContent='오류: '+e.message;errEl.style.display='block';}
+  loading(false);
+}
+
+// ── 자동 로그아웃 ────────────────────────────────────
+function resetAutoLogoutTimer(){
+  if(autoLogoutTimer) clearTimeout(autoLogoutTimer);
+  // 25분 후 경고, 30분 후 로그아웃
+  autoLogoutTimer=setTimeout(()=>{
+    if(!currentUser) return;
+    showError('⏰ 5분 후 자동 로그아웃됩니다. 계속 사용하려면 화면을 터치하거나 클릭하세요.');
+    autoLogoutTimer=setTimeout(async()=>{
+      if(currentUser){
+        await handleSessionExpiry();
+      }
+    }, 5*60*1000);
+  }, AUTO_LOGOUT_MS - 5*60*1000);
+}
+
+// 마우스/키보드/터치 이벤트 시 타이머 리셋
+['mousemove','keydown','touchstart','click'].forEach(evt=>{
+  document.addEventListener(evt, ()=>{ if(currentUser) resetAutoLogoutTimer(); }, {passive:true});
+});
+
+// 페이지 벗어날 때 세션 삭제 (beforeunload - 최선 노력)
+window.addEventListener('beforeunload', ()=>{
+  if(currentUser){
+    // sendBeacon으로 비동기 없이 전송 (beforeunload에서 fetch는 불안정)
+    const url=`${SUPA_URL}/rest/v1/user_sessions?member_name=eq.${encodeURIComponent(currentUser.name)}`;
+    navigator.sendBeacon(url+'&_method=DELETE', JSON.stringify({}));
+    // fetch fallback (keepalive)
+    fetch(url, {method:'DELETE', headers:H, keepalive:true}).catch(()=>{});
+  }
+});
+
+// visibilitychange: 탭 숨김 10분 후 자동 로그아웃
+let hiddenSince=null;
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden){
+    hiddenSince=Date.now();
+  } else {
+    if(hiddenSince&&currentUser){
+      const away=Date.now()-hiddenSince;
+      if(away>=AUTO_LOGOUT_MS){
+        alert('장시간 자리를 비워 자동 로그아웃됩니다.');
+        doLogout();
+      }
+    }
+    hiddenSince=null;
+  }
+});
+
+// ── 출석 수정 모달 ───────────────────────────────────
+let editRecordId = null;
+
+function openEditModal(id, name, date, checkin, checkout){
+  editRecordId = id;
+  document.getElementById('edit-name-badge').textContent = name;
+  document.getElementById('edit-date-badge').textContent = date;
+  document.getElementById('edit-checkin').value = checkin;
+  document.getElementById('edit-checkout').value = checkout;
+  document.getElementById('edit-err').style.display='none';
+  updateEditPreview();
+  document.getElementById('edit-modal').classList.add('active');
+}
+
+function closeEditModal(){
+  document.getElementById('edit-modal').classList.remove('active');
+  editRecordId=null;
+}
+
+function updateEditPreview(){
+  const ci=document.getElementById('edit-checkin').value.trim();
+  const co=document.getElementById('edit-checkout').value.trim();
+  const preEl=document.getElementById('edit-preview-hours');
+  if(ci&&co&&/^\d{2}:\d{2}:\d{2}$/.test(ci)&&/^\d{2}:\d{2}:\d{2}$/.test(co)){
+    const toSec=t=>{const[h,m,s]=t.split(':').map(Number);return h*3600+m*60+s;};
+    let diff=toSec(co)-toSec(ci);
+    if(diff<0) diff+=86400; // 자정 넘김
+    const h=Math.floor(diff/3600),m=Math.floor((diff%3600)/60),s=diff%60;
+    const hours=Math.round(diff/3600*100)/100;
+    preEl.textContent=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')} (${hours}h)`;
+  } else {
+    preEl.textContent='-';
+  }
+}
+
+async function saveEditRecord(){
+  const ci=document.getElementById('edit-checkin').value.trim();
+  const co=document.getElementById('edit-checkout').value.trim();
+  const errEl=document.getElementById('edit-err');
+  errEl.style.display='none';
+  if(!/^\d{2}:\d{2}:\d{2}$/.test(ci)||!/^\d{2}:\d{2}:\d{2}$/.test(co)){
+    errEl.textContent='HH:MM:SS 형식으로 입력하세요. 예) 08:30:00';
+    errEl.style.display='block';return;
+  }
+  const toSec=t=>{const[h,m,s]=t.split(':').map(Number);return h*3600+m*60+s;};
+  let diff=toSec(co)-toSec(ci);
+  if(diff<0) diff+=86400;
+  if(diff<600){errEl.textContent='체류시간이 10분 미만입니다.';errEl.style.display='block';return;}
+  const hours=Math.round(diff/3600*100)/100;
+  loading(true);
+  try{
+    if(!currentUser||currentUser.role!=='manager') throw new Error('관리자 권한 필요');
+    // RPC — DB에서 관리자 권한 + 수정 + audit log 한번에 처리
+    await sbRPC('manager_update_record',{
+      p_token: sessionToken,
+      p_record_id: editRecordId,
+      p_checkin: ci,
+      p_checkout: co,
+      p_hours: hours
+    });
+    closeEditModal();
+    await renderDataTable();
+  }catch(e){errEl.textContent='저장 오류: '+e.message;errEl.style.display='block';}
+  loading(false);
+}
+
+async function deleteRecord(){
+  if(!confirm('⚠️ 이 출석 기록을 삭제할까요?\n\n삭제된 데이터는 복구할 수 없습니다.\n삭제 전 엑셀 백업을 권장합니다.'))return;
+  loading(true);
+  try{
+    if(!currentUser||currentUser.role!=='manager') throw new Error('관리자 권한 필요');
+    await sbRPC('manager_delete_record',{
+      p_token: sessionToken,
+      p_record_id: editRecordId
+    });
+    closeEditModal();
+    await renderDataTable();
+  }catch(e){showError('삭제 오류: '+e.message);}
+  loading(false);
+}
+
+// ── Audit Log ────────────────────────────────────────
+async function writeAuditLog(action, targetName='', detail=''){
+  if(!currentUser) return;
+  try{
+    await sbPost('audit_log',{
+      actor_name: currentUser.name,
+      action,
+      target_name: targetName,
+      detail
+    });
+  }catch(e){ console.warn('audit log 실패:', e.message); }
+}
+
+async function renderAuditLog(){
+  const tbody=document.getElementById('audit-table');
+  if(!tbody) return;
+  try{
+    const logs=await sbGet('audit_log','?order=created_at.desc&limit=50');
+    tbody.innerHTML=logs.length===0
+      ?'<tr><td colspan="4" style="color:#666">기록 없음</td></tr>'
+      :logs.map(l=>{
+          const dt=new Date(l.created_at);
+          const dateStr=fmtDate(dt)+' '+fmtTimeFull(dt);
+          return`<tr>
+            <td style="font-size:11px;color:#666">${dateStr}</td>
+            <td style="font-weight:500">${l.actor_name}</td>
+            <td><span class="badge" style="background:#EEEDFE;color:#3C3489">${l.action}</span></td>
+            <td style="font-size:12px;color:#666">${l.target_name||''} ${l.detail||''}</td>
+          </tr>`;
+        }).join('');
+  }catch(e){showError('로그 조회 실패: '+e.message);}
+}
+
+// ── DB 관리 ───────────────────────────────────────────
+const BYTES_PER_RECORD = 250; // 레코드당 평균 바이트 추정
+const MAX_DB_BYTES = 500 * 1024 * 1024; // 500MB
+
+async function renderDBStats(){
+  document.getElementById('db-stats-loading').style.display='block';
+  document.getElementById('db-stats').style.display='none';
+  try{
+    // 전체 레코드 수 (count 헤더 활용)
+    const recResp = await fetch(`${SUPA_URL}/rest/v1/records?select=id`,{
+      headers:{...H,'Prefer':'count=exact','Range':'0-0'}
+    });
+    const totalRec = parseInt(recResp.headers.get('Content-Range')?.split('/')[1]||'0');
+
+    const memberResp = await fetch(`${SUPA_URL}/rest/v1/members?select=id&approved=eq.true`,{
+      headers:{...H,'Prefer':'count=exact','Range':'0-0'}
+    });
+    const totalMember = parseInt(memberResp.headers.get('Content-Range')?.split('/')[1]||'0');
+
+    // 가장 오래된 기록
+    const oldest = await sbGet('records','?order=date.asc&limit=1&select=date');
+
+    // 용량 추정
+    const usedBytes = totalRec * BYTES_PER_RECORD;
+    const usedKB = (usedBytes/1024).toFixed(1);
+    const usedMB = (usedBytes/1024/1024).toFixed(3);
+    const pct = Math.min(100,(usedBytes/MAX_DB_BYTES*100));
+    const remainMB = ((MAX_DB_BYTES-usedBytes)/1024/1024).toFixed(1);
+
+    document.getElementById('db-stats-loading').style.display='none';
+    document.getElementById('db-stats').style.display='block';
+
+    const usedLabel = usedBytes<1024*1024 ? `${usedKB} KB 사용` : `${usedMB} MB 사용`;
+    document.getElementById('db-used-label').textContent = usedLabel;
+    document.getElementById('db-pct-label').textContent = `${pct.toFixed(4)}% 사용`;
+    document.getElementById('db-remain-label').textContent = `남은 용량: ${remainMB} MB`;
+    document.getElementById('db-rec-count').textContent = totalRec.toLocaleString()+'건';
+    document.getElementById('db-member-count').textContent = totalMember+'명';
+    document.getElementById('db-oldest').textContent = oldest.length>0 ? oldest[0].date : '-';
+
+    // 프로그레스바 색상
+    const bar = document.getElementById('db-progress-bar');
+    bar.style.width = Math.max(0.5,pct)+'%';
+    bar.style.background = pct>80?'#D85A30':pct>50?'#BA7517':'#1D9E75';
+
+    // 경고 박스
+    const warnEl = document.getElementById('db-warn-box');
+    if(pct>80){
+      warnEl.style.display='block';
+      warnEl.className='warn-box';
+      warnEl.textContent='⚠️ DB 용량이 80%를 초과했습니다. 오래된 데이터를 백업 후 삭제하세요.';
+    } else if(pct>50){
+      warnEl.style.display='block';
+      warnEl.className='notice-box';
+      warnEl.textContent='📊 DB 용량이 50%를 초과했습니다. 정기 백업을 권장합니다.';
+    } else {
+      warnEl.style.display='none';
+    }
+
+    // 수명 예측
+    const lifetimeEl = document.getElementById('db-lifetime');
+    if(totalRec>0){
+      const oldestDate = oldest.length>0 ? new Date(oldest[0].date) : new Date();
+      const daysSinceFirst = Math.max(1,(Date.now()-oldestDate)/86400000);
+      const bytesPerDay = usedBytes/daysSinceFirst;
+      const daysLeft = bytesPerDay>0 ? (MAX_DB_BYTES-usedBytes)/bytesPerDay : 999999;
+      const yearsLeft = (daysLeft/365).toFixed(0);
+      const reachDate = new Date(Date.now()+daysLeft*86400000);
+      const reachStr = reachDate.getFullYear()+'년 '+String(reachDate.getMonth()+1).padStart(2,'0')+'월';
+      lifetimeEl.innerHTML = `
+        <div style="margin-bottom:8px">현재 사용량 기준으로 DB가 가득 차는 예상 시점은 <strong>${reachStr}</strong> (약 <strong>${yearsLeft}년</strong> 후)입니다.</div>
+        <div style="font-size:12px;color:#999">일평균 데이터 증가량: ${(bytesPerDay/1024).toFixed(2)} KB/일 · 총 ${totalRec}건 / ${daysSinceFirst.toFixed(0)}일 경과</div>`;
+    } else {
+      lifetimeEl.textContent = '기록 데이터가 없어 예측할 수 없습니다.';
+    }
+  }catch(e){
+    document.getElementById('db-stats-loading').textContent='오류: '+e.message;
+  }
+}
+
+async function backupBeforeDelete(){
+  const before = document.getElementById('db-delete-before').value;
+  if(!before){alert('날짜를 선택하세요.');return;}
+  loading(true);
+  const recs = await sbGet('records',`?date=lt.${before}&order=date.asc`);
+  loading(false);
+  if(recs.length===0){alert('해당 날짜 이전 데이터가 없습니다.');return;}
+  const wsData=[
+    ['날짜','이름','입실','퇴실','체류시간(h)'],
+    ...recs.map(r=>[r.date,r.member_name,r.checkin,r.checkout,parseFloat(r.hours)])
+  ];
+  const ws=XLSX.utils.aoa_to_sheet(wsData);
+  ws['!cols']=[{wch:12},{wch:10},{wch:12},{wch:12},{wch:12}];
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'출석명단_백업');
+  XLSX.writeFile(wb,`언시반_백업_${before}이전_${fmtDate(new Date())}.xlsx`);
+  const resEl=document.getElementById('db-delete-result');
+  resEl.style.display='block';
+  resEl.style.color='#1D9E75';
+  resEl.textContent=`✅ ${recs.length}건 백업 완료. 이제 삭제를 진행할 수 있습니다.`;
+}
+
+async function deleteOldRecords(){
+  const before = document.getElementById('db-delete-before').value;
+  if(!before){alert('날짜를 선택하세요.');return;}
+  const resEl=document.getElementById('db-delete-result');
+  if(resEl.style.display==='none'||!resEl.textContent.includes('백업 완료')){
+    alert('삭제 전에 반드시 백업을 먼저 진행하세요.');return;
+  }
+  if(!confirm(`🗑 데이터 영구 삭제\n\n${before} 이전의 모든 출석 기록을 삭제합니다.\n이 작업은 절대 되돌릴 수 없습니다.\n\n백업이 완료된 것을 확인하셨나요?`))return;
+  loading(true);
+  try{
+    await sbDel('records',`?date=lt.${before}`);
+    resEl.style.color='#D85A30';
+    resEl.textContent=`🗑 ${before} 이전 데이터 삭제 완료.`;
+    await renderDBStats();
+  }catch(e){alert('삭제 오류: '+e.message);}
+  loading(false);
+}
+
+// ── 오프라인 감지 ──────────────────────────────────
+window.addEventListener('online', ()=>{
+  const b=document.getElementById('offline-banner');
+  if(b) b.style.display='none';
+  showError('🌐 네트워크가 복구됐습니다.');
+});
+window.addEventListener('offline', ()=>{
+  let b=document.getElementById('offline-banner');
+  if(!b){
+    b=document.createElement('div');
+    b.id='offline-banner';
+    b.className='offline-banner';
+    b.textContent='🌐 네트워크 연결이 끊겼습니다. 입실/퇴실 기록이 저장되지 않을 수 있습니다.';
+    document.body.appendChild(b);
+  }
+  b.style.display='block';
+});
+
+init();
+</script>
+</body>
+</html>
